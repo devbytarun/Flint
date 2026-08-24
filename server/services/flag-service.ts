@@ -1,4 +1,4 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import {
@@ -239,6 +239,44 @@ export async function updateFlagEnvironmentConfig(input: {
     // Keep the parent flag's updatedAt fresh for list ordering.
     await tx.update(flags).set({ updatedAt: new Date() }).where(eq(flags.id, input.flagId));
   });
+}
+
+export interface ProjectFlagStats {
+  totalFlags: number;
+  /** Per-environment: how many flags are currently serving. */
+  byEnvironment: Array<{
+    key: string;
+    name: string;
+    protected: boolean;
+    total: number;
+    enabled: number;
+  }>;
+}
+
+/**
+ * Real dashboard statistics in one grouped query — no fabricated numbers.
+ */
+export async function getProjectFlagStats(projectId: string): Promise<ProjectFlagStats> {
+  const [{ count: totalFlags }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(flags)
+    .where(eq(flags.projectId, projectId));
+
+  const rows = await db
+    .select({
+      key: environments.key,
+      name: environments.name,
+      protected: environments.protected,
+      total: sql<number>`count(${flagEnvironmentConfigs.id})::int`,
+      enabled: sql<number>`count(${flagEnvironmentConfigs.id}) filter (where ${flagEnvironmentConfigs.enabled})::int`,
+    })
+    .from(environments)
+    .leftJoin(flagEnvironmentConfigs, eq(flagEnvironmentConfigs.environmentId, environments.id))
+    .where(eq(environments.projectId, projectId))
+    .groupBy(environments.id, environments.key, environments.name, environments.protected)
+    .orderBy(asc(environments.createdAt));
+
+  return { totalFlags, byEnvironment: rows };
 }
 
 export async function renameFlag(input: {

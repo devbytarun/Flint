@@ -57,7 +57,7 @@ Evaluate flags for a context.
 ```
 
 - `flagKeys` omitted → every flag in the environment (bootstrap mode).
-- `targetingKey` drives deterministic bucketing; without it, percentage rollouts are skipped and defaults apply (documented in [feature-evaluation](feature-evaluation.md)).
+- `targetingKey` drives deterministic bucketing; without it, percentage rollouts are skipped and defaults apply (documented in [feature-flags](feature-flags.md)).
 
 **Response**
 

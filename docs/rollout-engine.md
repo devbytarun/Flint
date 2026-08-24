@@ -1,4 +1,4 @@
-# Deterministic rollout
+# Rollout engine
 
 ## The problem
 
@@ -52,4 +52,4 @@ Rollout requires an identity to be deterministic about. Keyless requests skip st
 
 ## Related reading
 
-[feature-evaluation](feature-evaluation.md) · golden-value tests in `tests/evaluation.test.ts`
+[feature-flags](feature-flags.md) · golden-value tests in `tests/evaluation.test.ts`

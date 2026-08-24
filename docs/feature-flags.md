@@ -1,6 +1,12 @@
-# Feature evaluation
+# Feature flags
 
-The engine lives in `lib/evaluation/` and is a **pure function**:
+A flag is identity plus per-environment behavior. The `flags` table owns
+identity (`key`, unique per project, and an immutable `id`); everything
+mutable lives in `flag_environment_configs` — one row per (flag,
+environment) holding `enabled`, `rollout_percentage` (basis points), and
+an ordered JSONB array of targeting rules. See [database](database.md).
+
+The evaluation engine lives in `lib/evaluation/` and is a **pure function**:
 
 ```ts
 evaluateFlag(config: FlagConfig | null, context: EvaluationContext): EvaluationResult

@@ -5,6 +5,7 @@ import { users } from "@/db/schema";
 
 import { hashPassword, verifyPassword } from "@/server/auth/password";
 import { pruneExpiredSessions } from "@/server/auth/session";
+import { hasPostgresCode } from "@/server/lib/db-errors";
 
 /**
  * Authentication business logic. Deliberately framework-free: no cookies,
@@ -39,13 +40,7 @@ export async function registerUser(input: RegisterInput): Promise<RegisterResult
       .returning({ id: users.id });
     return { ok: true, userId: user.id };
   } catch (error) {
-    // Postgres unique_violation on the users_email_unique_idx index.
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      (error as { code?: string }).code === "23505"
-    ) {
+    if (hasPostgresCode(error, "23505")) {
       return { ok: false, error: "EMAIL_TAKEN" };
     }
     throw error;

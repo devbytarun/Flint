@@ -45,6 +45,7 @@ export default async function ProjectLayout({
         <TabNav
           items={[
             { href: `/project/${slug}`, label: "Overview" },
+            { href: `/project/${slug}/flags`, label: "Flags" },
             { href: `/project/${slug}/audit`, label: "Audit log" },
             { href: `/project/${slug}/settings`, label: "Settings" },
           ]}

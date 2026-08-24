@@ -146,10 +146,9 @@ describe("evaluateFlag — environment isolation", () => {
     const prod = evaluateFlag(makeConfig({ rolloutPercentage: 3000 }), {
       targetingKey: "user_123",
     });
-    const staging = evaluateFlag(
-      makeConfig({ environmentId: "env-2", rolloutPercentage: 3000 }),
-      { targetingKey: "user_123" },
-    );
+    const staging = evaluateFlag(makeConfig({ environmentId: "env-2", rolloutPercentage: 3000 }), {
+      targetingKey: "user_123",
+    });
     // Same user can be treated differently across environments because the
     // environment id participates in the hash.
     expect(prod.bucket).not.toBe(staging.bucket);
@@ -260,24 +259,19 @@ describe("evaluateFlag — invalid configurations", () => {
   });
 
   it("clamps out-of-range rollout percentages", () => {
-    const negative = evaluateFlag(
-      makeConfig({ rolloutPercentage: -500 }),
-      { targetingKey: "u1" },
-    );
+    const negative = evaluateFlag(makeConfig({ rolloutPercentage: -500 }), { targetingKey: "u1" });
     expect(negative.enabled).toBe(false);
 
-    const overflowing = evaluateFlag(
-      makeConfig({ rolloutPercentage: 20000 }),
-      { targetingKey: "u1" },
-    );
+    const overflowing = evaluateFlag(makeConfig({ rolloutPercentage: 20000 }), {
+      targetingKey: "u1",
+    });
     expect(overflowing.enabled).toBe(true);
   });
 
   it("treats non-finite rollout as fully excluded", () => {
-    const result = evaluateFlag(
-      makeConfig({ rolloutPercentage: Number.NaN }),
-      { targetingKey: "u1" },
-    );
+    const result = evaluateFlag(makeConfig({ rolloutPercentage: Number.NaN }), {
+      targetingKey: "u1",
+    });
     expect(result.enabled).toBe(false);
   });
 });

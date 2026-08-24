@@ -1,10 +1,5 @@
 import { computeBucket } from "./bucketing";
-import type {
-  EvaluationContext,
-  EvaluationResult,
-  FlagConfig,
-  TargetingRule,
-} from "./types";
+import type { EvaluationContext, EvaluationResult, FlagConfig, TargetingRule } from "./types";
 
 /** Hard bounds for rollout percentage in basis points; used to clamp bad data defensively. */
 const MIN_ROLLOUT = 0;

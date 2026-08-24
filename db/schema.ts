@@ -128,9 +128,7 @@ export const environments = pgTable(
     protected: boolean("protected").notNull().default(false),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [
-    uniqueIndex("environments_project_key_unique_idx").on(table.projectId, table.key),
-  ],
+  (table) => [uniqueIndex("environments_project_key_unique_idx").on(table.projectId, table.key)],
 );
 
 /* -------------------------------------------------------------------------- */

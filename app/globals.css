@@ -1,28 +1,30 @@
 @import "tailwindcss";
 
 /*
- * Flint design tokens — dark-first, developer-infrastructure aesthetic.
- * Surfaces step from deep background to raised panels; borders are subtle
- * and consistent; a single amber accent carries brand and interactivity.
+ * Flint design system — see DESIGN.md for the spec these tokens implement.
+ * Dark-first, border-driven depth, single amber accent, semantic statuses.
  */
 @theme {
+  /* Surfaces */
   --color-canvas: #09090b;
   --color-surface: #101012;
   --color-surface-raised: #16161a;
   --color-overlay: #1d1d22;
 
+  /* Borders */
   --color-border-subtle: #1f1f24;
   --color-border: #2a2a31;
   --color-border-strong: #3a3a44;
 
+  /* Text */
   --color-text-primary: #fafafa;
   --color-text-secondary: #a1a1aa;
   --color-text-muted: #62626d;
 
+  /* Semantic */
   --color-accent: #f59e0b;
   --color-accent-hover: #d97706;
   --color-accent-muted: #451a03;
-
   --color-success: #34d399;
   --color-danger: #f87171;
   --color-warning: #fbbf24;
@@ -32,6 +34,14 @@
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --radius-card: 10px;
+  --radius-overlay: 12px;
+
+  /* The only two shadows in the system (borders do the rest). */
+  --shadow-pop: 0 8px 24px rgb(0 0 0 / 0.45);
+  --shadow-modal: 0 16px 48px rgb(0 0 0 / 0.6);
+
+  /* Motion */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 html,
@@ -45,7 +55,6 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Consistent focus treatment across interactive elements. */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
@@ -55,8 +64,138 @@ body {
   background: rgba(245, 158, 11, 0.25);
 }
 
-/* Slim dark scrollbars. */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-strong) transparent;
+}
+
+/* Tabular figures wherever numbers align in columns. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Loading skeletons (route-level loading states mirror final layout) */
+/* ------------------------------------------------------------------ */
+
+@keyframes flint-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.skeleton {
+  border-radius: 6px;
+  background: var(--color-surface-raised);
+  animation: flint-pulse 1.4s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/* CSS-only tooltip: <button data-tooltip="…">                         */
+/* Never the sole carrier of critical information.                     */
+/* ------------------------------------------------------------------ */
+
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-overlay);
+  color: var(--color-text-primary);
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: nowrap;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 50;
+  pointer-events: none;
+  box-shadow: var(--shadow-pop);
+}
+
+/* ------------------------------------------------------------------ */
+/* Dialog motion (Radix data-state driven; library awaits animationend) */
+/* ------------------------------------------------------------------ */
+
+@keyframes flint-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes flint-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Content is centered via left/top 50%; transforms live in the keyframes. */
+@keyframes flint-dialog-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 8px)) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes flint-dialog-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 4px)) scale(0.98);
+  }
+}
+
+.flint-overlay[data-state="open"] {
+  animation: flint-fade-in 150ms ease-out;
+}
+
+.flint-overlay[data-state="closed"] {
+  animation: flint-fade-out 100ms ease-in forwards;
+}
+
+.flint-dialog[data-state="open"] {
+  animation: flint-dialog-in 160ms var(--ease-out-quart);
+}
+
+.flint-dialog[data-state="closed"] {
+  animation: flint-dialog-out 100ms ease-in forwards;
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion: transforms off, opacity-only fallbacks              */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

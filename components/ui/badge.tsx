@@ -1,12 +1,14 @@
 import { cn } from "@/lib/utils";
 
-type BadgeTone = "neutral" | "accent" | "success" | "danger";
+export type BadgeTone = "neutral" | "accent" | "success" | "danger" | "warning" | "info";
 
 const tones: Record<BadgeTone, string> = {
   neutral: "border-border bg-surface-raised text-text-secondary",
   accent: "border-accent/30 bg-accent-muted text-accent",
   success: "border-success/30 bg-success/10 text-success",
   danger: "border-danger/40 bg-danger/10 text-danger",
+  warning: "border-warning/30 bg-warning/10 text-warning",
+  info: "border-info/30 bg-info/10 text-info",
 };
 
 const roleTones: Record<string, BadgeTone> = {
@@ -24,11 +26,8 @@ export function Badge({
   tone?: BadgeTone;
   className?: string;
 }) {
-  const resolved =
-    tone ??
-    (children === "owner" || children === "admin" || children === "member"
-      ? roleTones[String(children)]
-      : "neutral");
+  const resolved = tone ?? roleTones[String(children)] ?? "neutral";
+
   return (
     <span
       className={cn(
@@ -40,4 +39,32 @@ export function Badge({
       {children}
     </span>
   );
+}
+
+/** Status dot + label. Text always accompanies color (a11y). */
+export function StatusDot({
+  on,
+  label,
+  className,
+}: {
+  on: boolean;
+  label: string;
+  className?: string;
+}) {
+  return (
+    <span className={cn("inline-flex items-center gap-1.5 text-[13px]", className)}>
+      <span
+        aria-hidden="true"
+        className={cn("size-1.5 rounded-full", on ? "bg-success" : "bg-border-strong")}
+      />
+      {label}
+    </span>
+  );
+}
+
+/** Maps an action name like "flag_config.updated" to a badge tone. */
+export function actionTone(action: string): BadgeTone {
+  if (action.endsWith(".deleted") || action.endsWith(".revoked")) return "danger";
+  if (action.endsWith(".created")) return "success";
+  return "neutral";
 }

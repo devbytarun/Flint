@@ -46,6 +46,7 @@ export default async function ProjectLayout({
           items={[
             { href: `/project/${slug}`, label: "Overview" },
             { href: `/project/${slug}/flags`, label: "Flags" },
+            { href: `/project/${slug}/keys`, label: "API keys" },
             { href: `/project/${slug}/audit`, label: "Audit log" },
             { href: `/project/${slug}/settings`, label: "Settings" },
           ]}

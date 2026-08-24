@@ -16,11 +16,3 @@ export function hasPostgresCode(error: unknown, code: string): boolean {
   }
   return false;
 }
-
-/** Thrown when a unique constraint (e.g. duplicate flag key) is violated. */
-export class UniqueConstraintError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "UniqueConstraintError";
-  }
-}

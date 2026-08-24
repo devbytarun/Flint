@@ -99,11 +99,16 @@ export async function createFlag(input: {
 
 /** Matrix read model: every flag joined with its configuration per environment. */
 export async function listFlagsWithEnvironments(projectId: string): Promise<{
-  environments: Array<{ id: string; key: string; name: string }>;
+  environments: Array<{ id: string; key: string; name: string; protected: boolean }>;
   rows: Array<{ flag: Flag; configs: Record<string, FlagEnvironmentConfig> }>;
 }> {
   const envRows = await db
-    .select({ id: environments.id, key: environments.key, name: environments.name })
+    .select({
+      id: environments.id,
+      key: environments.key,
+      name: environments.name,
+      protected: environments.protected,
+    })
     .from(environments)
     .where(eq(environments.projectId, projectId))
     .orderBy(asc(environments.createdAt));
@@ -141,7 +146,7 @@ export async function getFlagForProject(
   flagKey: string,
 ): Promise<{
   flag: Flag;
-  configs: Array<FlagEnvironmentConfig & { environmentKey: string }>;
+  configs: Array<FlagEnvironmentConfig & { environmentKey: string; environmentProtected: boolean }>;
 } | null> {
   const [flag] = await db
     .select()
@@ -155,6 +160,7 @@ export async function getFlagForProject(
     .select({
       config: flagEnvironmentConfigs,
       environmentKey: environments.key,
+      environmentProtected: environments.protected,
     })
     .from(flagEnvironmentConfigs)
     .innerJoin(environments, eq(environments.id, flagEnvironmentConfigs.environmentId))
@@ -163,7 +169,11 @@ export async function getFlagForProject(
 
   return {
     flag,
-    configs: configs.map((row) => ({ ...row.config, environmentKey: row.environmentKey })),
+    configs: configs.map((row) => ({
+      ...row.config,
+      environmentKey: row.environmentKey,
+      environmentProtected: row.environmentProtected,
+    })),
   };
 }
 

@@ -29,13 +29,13 @@ export default async function FlagDetailPage({
 
   const found = await getFlagForProject(context.project.id, key);
   if (!found) notFound();
-
   // Editor state keyed by environment id.
   const editorEnvironments = found.configs.map((config) => ({
     id: config.id,
     key: config.environmentKey,
     name: config.environmentKey.charAt(0).toUpperCase() + config.environmentKey.slice(1),
-    protected: false,
+    protected: config.environmentProtected,
+    enabled: config.enabled,
   }));
 
   const initialConfigs: Record<

@@ -6,6 +6,8 @@ export default defineConfig({
     environment: "node",
     include: ["tests/**/*.test.ts"],
     setupFiles: ["tests/setup-env.ts"],
+    // Integration tests hit a remote Postgres; allow generous latency.
+    testTimeout: 20000,
     passWithNoTests: true,
   },
   resolve: {

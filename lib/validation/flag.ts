@@ -12,7 +12,11 @@ export const flagKeySchema = z
 
 export const createFlagSchema = z.object({
   key: flagKeySchema,
-  name: z.string().trim().min(1, "Name is required").max(120, "Name must be at most 120 characters"),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Name is required")
+    .max(120, "Name must be at most 120 characters"),
   description: z.string().trim().max(500, "Description must be at most 500 characters").optional(),
 });
 

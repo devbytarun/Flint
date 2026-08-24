@@ -5,20 +5,14 @@ import { Card } from "@/components/ui/card";
 
 export const metadata = { title: "New flag" };
 
-export default async function NewFlagPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function NewFlagPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   return (
     <div className="mx-auto max-w-md">
       <Card>
         <h2 className="text-lg font-semibold tracking-tight">Create a flag</h2>
-        <p className="mt-1 text-sm text-text-secondary">
-          It starts disabled in every environment.
-        </p>
+        <p className="mt-1 text-sm text-text-secondary">It starts disabled in every environment.</p>
         <div className="mt-6">
           <CreateFlagForm slug={slug} />
         </div>

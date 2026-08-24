@@ -7,13 +7,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { and, eq } from "drizzle-orm";
 
 import { db, sql } from "@/db";
-import {
-  auditLogs,
-  environments,
-  flagEnvironmentConfigs,
-  flags,
-  users,
-} from "@/db/schema";
+import { auditLogs, environments, flagEnvironmentConfigs, flags, users } from "@/db/schema";
 import { createProject } from "@/server/services/project-service";
 import {
   createFlag,

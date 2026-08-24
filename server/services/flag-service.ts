@@ -116,14 +116,8 @@ export async function listFlagsWithEnvironments(projectId: string): Promise<{
       config: flagEnvironmentConfigs,
     })
     .from(flags)
-    .leftJoin(
-      flagEnvironmentConfigs,
-      eq(flagEnvironmentConfigs.flagId, flags.id),
-    )
-    .leftJoin(
-      environments,
-      eq(environments.id, flagEnvironmentConfigs.environmentId),
-    )
+    .leftJoin(flagEnvironmentConfigs, eq(flagEnvironmentConfigs.flagId, flags.id))
+    .leftJoin(environments, eq(environments.id, flagEnvironmentConfigs.environmentId))
     .where(eq(flags.projectId, projectId))
     .orderBy(asc(flags.createdAt));
 
@@ -145,7 +139,10 @@ export async function listFlagsWithEnvironments(projectId: string): Promise<{
 export async function getFlagForProject(
   projectId: string,
   flagKey: string,
-): Promise<{ flag: Flag; configs: Array<FlagEnvironmentConfig & { environmentKey: string }> } | null> {
+): Promise<{
+  flag: Flag;
+  configs: Array<FlagEnvironmentConfig & { environmentKey: string }>;
+} | null> {
   const [flag] = await db
     .select()
     .from(flags)

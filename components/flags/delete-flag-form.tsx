@@ -3,9 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/field";
-import {
-  deleteFlagAction,
-} from "@/server/actions/flags";
+import { deleteFlagAction } from "@/server/actions/flags";
 
 export function DeleteFlagForm({
   slug,

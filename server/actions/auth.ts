@@ -29,6 +29,10 @@ export interface AuthFormState {
 const LOGIN_ATTEMPT_LIMIT = 10;
 const LOGIN_ATTEMPT_WINDOW_MS = 5 * 60 * 1000;
 
+/** Registration is expensive (Argon2 hashing) — throttle per IP per hour. */
+const REGISTER_LIMIT = 20;
+const REGISTER_WINDOW_MS = 60 * 60 * 1000;
+
 function rateLimitKey(scope: string, identity: string): string {
   return `${scope}:${identity.toLowerCase()}`;
 }
@@ -48,6 +52,17 @@ export async function registerAction(
       fieldErrors: zodFieldErrors(parsed.error),
       values: Object.fromEntries(formData) as Partial<RegisterValues>,
     };
+  }
+
+  const metadata = await getRequestMetadata();
+  const byIp = rateLimiter.hit(
+    rateLimitKey("register-ip", metadata.ipAddress ?? "unknown"),
+    REGISTER_LIMIT,
+    REGISTER_WINDOW_MS,
+  );
+
+  if (!byIp.success) {
+    return { error: "Too many sign-up attempts. Please try again later." };
   }
 
   const result = await registerUser(parsed.data);

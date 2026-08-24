@@ -5,9 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/server/auth/current-user";
 import { getProjectContext } from "@/server/services/project-service";
-import {
-  listFlagsWithEnvironments,
-} from "@/server/services/flag-service";
+import { listFlagsWithEnvironments } from "@/server/services/flag-service";
 import { toggleFlagAction } from "@/server/actions/flags";
 
 export const metadata = { title: "Flags" };
@@ -18,11 +16,7 @@ function percentLabel(config: { enabled: boolean; rolloutPercentage: number }): 
   return pct === 100 ? "ON" : `${pct}%`;
 }
 
-export default async function FlagsPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function FlagsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -75,7 +69,10 @@ export default async function FlagsPage({
             </thead>
             <tbody>
               {rows.map(({ flag, configs }) => (
-                <tr key={flag.id} className="border-b border-border-subtle last:border-0 hover:bg-surface-raised/40">
+                <tr
+                  key={flag.id}
+                  className="border-b border-border-subtle last:border-0 hover:bg-surface-raised/40"
+                >
                   <td className="px-4 py-3">
                     <Link
                       href={`/project/${slug}/flags/${flag.key}`}

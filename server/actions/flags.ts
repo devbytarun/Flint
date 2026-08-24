@@ -34,7 +34,9 @@ export interface FlagFormState {
   values?: Partial<{ name: string; description: string }>;
 }
 
-function fieldErrorsFrom(error: { issues: Array<{ path: Array<string | number | symbol>; message: string }> }): FlagFormState["fieldErrors"] {
+function fieldErrorsFrom(error: {
+  issues: Array<{ path: Array<string | number | symbol>; message: string }>;
+}): FlagFormState["fieldErrors"] {
   const result: NonNullable<FlagFormState["fieldErrors"]> = {};
   for (const issue of error.issues) {
     const field = issue.path[0];
@@ -282,7 +284,7 @@ export async function playgroundEvaluateAction(
     const raw = String(formData.get("attributes") ?? "{}").trim() || "{}";
     attributes = JSON.parse(raw);
   } catch {
-    return { error: "Attributes must be valid JSON, e.g. {\"plan\":\"pro\"}" };
+    return { error: 'Attributes must be valid JSON, e.g. {"plan":"pro"}' };
   }
 
   if (attributes === null || typeof attributes !== "object" || Array.isArray(attributes)) {

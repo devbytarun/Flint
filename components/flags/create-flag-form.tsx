@@ -5,10 +5,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FieldError, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  createFlagAction,
-  type FlagFormState,
-} from "@/server/actions/flags";
+import { createFlagAction, type FlagFormState } from "@/server/actions/flags";
 
 const initialState: FlagFormState = {};
 
@@ -18,7 +15,10 @@ export function CreateFlagForm({ slug }: { slug: string }) {
   return (
     <form action={formAction} className="space-y-4">
       {state.error ? (
-        <p role="alert" className="rounded-md border border-danger/30 bg-danger/10 px-3 py-2 text-[13px] text-danger">
+        <p
+          role="alert"
+          className="rounded-md border border-danger/30 bg-danger/10 px-3 py-2 text-[13px] text-danger"
+        >
           {state.error}
         </p>
       ) : null}
@@ -36,7 +36,9 @@ export function CreateFlagForm({ slug }: { slug: string }) {
           pattern="[a-z0-9_]+"
           invalid={Boolean(state.fieldErrors?.key)}
         />
-        <p className="text-xs text-text-muted">Lowercase letters, digits, underscores. Immutable after creation.</p>
+        <p className="text-xs text-text-muted">
+          Lowercase letters, digits, underscores. Immutable after creation.
+        </p>
         <FieldError messages={state.fieldErrors?.key} />
       </div>
 

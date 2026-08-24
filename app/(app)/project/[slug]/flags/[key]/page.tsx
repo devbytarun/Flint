@@ -34,8 +34,7 @@ export default async function FlagDetailPage({
   const editorEnvironments = found.configs.map((config) => ({
     id: config.id,
     key: config.environmentKey,
-    name:
-      config.environmentKey.charAt(0).toUpperCase() + config.environmentKey.slice(1),
+    name: config.environmentKey.charAt(0).toUpperCase() + config.environmentKey.slice(1),
     protected: false,
   }));
 
@@ -85,9 +84,7 @@ export default async function FlagDetailPage({
         environments={found.configs.map((config) => ({
           id: config.id,
           key: config.environmentKey,
-          name:
-            config.environmentKey.charAt(0).toUpperCase() +
-            config.environmentKey.slice(1),
+          name: config.environmentKey.charAt(0).toUpperCase() + config.environmentKey.slice(1),
         }))}
       />
 
@@ -111,8 +108,8 @@ export default async function FlagDetailPage({
         <Card className="border-danger/25">
           <h3 className="font-medium text-danger">Danger zone</h3>
           <p className="mt-0.5 text-[13px] text-text-secondary">
-            Deleting removes the flag and all environment configurations.
-            Audit history is preserved.
+            Deleting removes the flag and all environment configurations. Audit history is
+            preserved.
           </p>
           <div className="mt-4">
             <DeleteFlagForm

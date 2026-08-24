@@ -6,10 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/field";
 import type { TargetingOperator } from "@/lib/evaluation";
-import {
-  updateFlagConfigAction,
-  type FlagFormState,
-} from "@/server/actions/flags";
+import { updateFlagConfigAction, type FlagFormState } from "@/server/actions/flags";
 
 export interface EditorEnvironment {
   id: string;
@@ -35,7 +32,12 @@ interface DraftConfig {
 export interface EditorInitialConfig {
   enabled: boolean;
   rolloutPercentage: number; // basis points
-  rules: Array<{ attribute: string; operator: TargetingOperator; values: string[]; serve: boolean }>;
+  rules: Array<{
+    attribute: string;
+    operator: TargetingOperator;
+    values: string[];
+    serve: boolean;
+  }>;
 }
 
 const OPERATORS: TargetingOperator[] = [
@@ -136,7 +138,10 @@ export function FlagConfigEditor({
 
   function updateDraft(mutate: (draft: DraftConfig) => void) {
     setDrafts((previous) => {
-      const copy = { ...previous, [envId]: { ...previous[envId], rules: [...previous[envId].rules] } };
+      const copy = {
+        ...previous,
+        [envId]: { ...previous[envId], rules: [...previous[envId].rules] },
+      };
       mutate(copy[envId]);
       return copy;
     });
@@ -171,7 +176,10 @@ export function FlagConfigEditor({
         <input type="hidden" name="config" value={draft ? draftToPayload(draft) : ""} />
 
         {state.error ? (
-          <p role="alert" className="rounded-md border border-danger/30 bg-danger/10 px-3 py-2 text-[13px] text-danger">
+          <p
+            role="alert"
+            className="rounded-md border border-danger/30 bg-danger/10 px-3 py-2 text-[13px] text-danger"
+          >
             {state.error}
           </p>
         ) : null}
@@ -182,7 +190,9 @@ export function FlagConfigEditor({
             <div>
               <h3 className="font-medium">Status</h3>
               <p className="mt-0.5 text-[13px] text-text-secondary">
-                {draft.enabled ? "Serving in this environment." : "Disabled — evaluates to OFF for everyone."}
+                {draft.enabled
+                  ? "Serving in this environment."
+                  : "Disabled — evaluates to OFF for everyone."}
               </p>
             </div>
             <button
@@ -191,7 +201,11 @@ export function FlagConfigEditor({
               aria-checked={draft.enabled}
               aria-label={`Enable ${flagKey} in ${selectedEnv.key}`}
               disabled={pending}
-              onClick={() => updateDraft((d) => { d.enabled = !d.enabled; })}
+              onClick={() =>
+                updateDraft((d) => {
+                  d.enabled = !d.enabled;
+                })
+              }
               className={
                 draft.enabled
                   ? "relative h-6 w-11 cursor-pointer rounded-full bg-success/80 transition-colors"
@@ -222,7 +236,9 @@ export function FlagConfigEditor({
                   step={1}
                   value={draft.rolloutPercent}
                   onChange={(event) =>
-                    updateDraft((d) => { d.rolloutPercent = Number(event.target.value); })
+                    updateDraft((d) => {
+                      d.rolloutPercent = Number(event.target.value);
+                    })
                   }
                   className="h-1.5 w-full cursor-pointer accent-[var(--color-accent)]"
                   aria-valuetext={`${draft.rolloutPercent} percent`}
@@ -234,7 +250,9 @@ export function FlagConfigEditor({
                   value={draft.rolloutPercent}
                   onChange={(event) => {
                     const value = Number(event.target.value);
-                    updateDraft((d) => { d.rolloutPercent = Math.min(100, Math.max(0, value)); });
+                    updateDraft((d) => {
+                      d.rolloutPercent = Math.min(100, Math.max(0, value));
+                    });
                   }}
                   className="w-20 shrink-0 text-center"
                   aria-label="Rollout percentage"
@@ -284,7 +302,9 @@ export function FlagConfigEditor({
                       placeholder="attribute e.g. plan"
                       aria-label={`Rule ${index + 1} attribute`}
                       onChange={(event) =>
-                        updateDraft((d) => { d.rules[index].attribute = event.target.value; })
+                        updateDraft((d) => {
+                          d.rules[index].attribute = event.target.value;
+                        })
                       }
                       className="w-44 font-mono text-[13px]"
                     />
@@ -292,7 +312,9 @@ export function FlagConfigEditor({
                       value={rule.operator}
                       aria-label={`Rule ${index + 1} operator`}
                       onChange={(event) =>
-                        updateDraft((d) => { d.rules[index].operator = event.target.value as TargetingOperator; })
+                        updateDraft((d) => {
+                          d.rules[index].operator = event.target.value as TargetingOperator;
+                        })
                       }
                       className="h-9.5 cursor-pointer rounded-md border border-border bg-surface px-2 text-[13px] hover:border-border-strong"
                     >
@@ -308,14 +330,20 @@ export function FlagConfigEditor({
                         placeholder="values, comma-separated"
                         aria-label={`Rule ${index + 1} values`}
                         onChange={(event) =>
-                          updateDraft((d) => { d.rules[index].valuesText = event.target.value; })
+                          updateDraft((d) => {
+                            d.rules[index].valuesText = event.target.value;
+                          })
                         }
                         className="min-w-48 flex-1 font-mono text-[13px]"
                       />
                     ) : null}
                     <button
                       type="button"
-                      onClick={() => updateDraft((d) => { d.rules[index].serve = !d.rules[index].serve; })}
+                      onClick={() =>
+                        updateDraft((d) => {
+                          d.rules[index].serve = !d.rules[index].serve;
+                        })
+                      }
                       aria-label={`Rule ${index + 1} serves ${rule.serve ? "on" : "off"} — click to change`}
                       className={
                         rule.serve
@@ -331,10 +359,12 @@ export function FlagConfigEditor({
                         size="sm"
                         aria-label={`Move rule ${index + 1} up`}
                         disabled={index === 0}
-                        onClick={() => updateDraft((d) => {
-                          const [moved] = d.rules.splice(index, 1);
-                          d.rules.splice(index - 1, 0, moved!);
-                        })}
+                        onClick={() =>
+                          updateDraft((d) => {
+                            const [moved] = d.rules.splice(index, 1);
+                            d.rules.splice(index - 1, 0, moved!);
+                          })
+                        }
                       >
                         ↑
                       </Button>
@@ -343,10 +373,12 @@ export function FlagConfigEditor({
                         size="sm"
                         aria-label={`Move rule ${index + 1} down`}
                         disabled={index === draft.rules.length - 1}
-                        onClick={() => updateDraft((d) => {
-                          const [moved] = d.rules.splice(index, 1);
-                          d.rules.splice(index + 1, 0, moved!);
-                        })}
+                        onClick={() =>
+                          updateDraft((d) => {
+                            const [moved] = d.rules.splice(index, 1);
+                            d.rules.splice(index + 1, 0, moved!);
+                          })
+                        }
                       >
                         ↓
                       </Button>
@@ -354,7 +386,11 @@ export function FlagConfigEditor({
                         variant="ghost"
                         size="sm"
                         aria-label={`Remove rule ${index + 1}`}
-                        onClick={() => updateDraft((d) => { d.rules.splice(index, 1); })}
+                        onClick={() =>
+                          updateDraft((d) => {
+                            d.rules.splice(index, 1);
+                          })
+                        }
                         className="text-danger hover:text-danger"
                       >
                         ✕

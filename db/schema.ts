@@ -84,6 +84,12 @@ export const projects = pgTable(
     slug: text("slug").notNull(),
     description: text("description"),
     createdBy: uuid("created_by").references(() => users.id, { onDelete: "set null" }),
+    /**
+     * Projects are archived, never hard-deleted: cascade deletion would
+     * silently destroy audit history, which contradicts append-only
+     * audit guarantees.
+     */
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

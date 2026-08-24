@@ -8,6 +8,13 @@
       "when": 1787578648910,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787580142548,
+      "tag": "0001_add-project-archiving",
+      "breakpoints": true
     }
   ]
 }

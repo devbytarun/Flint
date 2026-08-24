@@ -40,4 +40,5 @@ if (process.env.NODE_ENV !== "production") {
 
 export const db = drizzle(sql, { schema });
 
-export { schema };
+/** Exposed for raw parameterized queries and explicit teardown in tests. */
+export { sql, schema };

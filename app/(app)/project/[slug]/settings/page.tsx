@@ -22,6 +22,8 @@ export default async function ProjectSettingsPage({
 
   return (
     <div className="max-w-2xl space-y-6">
+      <h1 className="text-lg font-semibold tracking-tight">Settings</h1>
+
       <Card>
         <h2 className="font-medium">General</h2>
         <p className="mt-1 text-[13px] text-text-secondary">Visible to all project members.</p>
